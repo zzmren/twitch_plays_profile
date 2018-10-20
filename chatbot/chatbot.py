@@ -11,6 +11,13 @@ or in the "license" file accompanying this file. This file is distributed on an 
 import sys
 import irc.bot
 import requests
+import inputProcessing
+from threading import Timer, Event
+from Thread import MyThread
+
+stopflag = Event()
+thread = MyThread(stopflag)
+thread.start()
 
 class TwitchBot(irc.bot.SingleServerIRCBot):
     def __init__(self, username, client_id, token, channel):
@@ -29,7 +36,6 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         port = 6667
         print('Connecting to ' + server + ' on port ' + str(port) + '...')
         irc.bot.SingleServerIRCBot.__init__(self, [(server, port, 'oauth:'+token)], username, username)
-        
 
     def on_welcome(self, c, e):
         print('Joining ' + self.channel)
@@ -67,25 +73,13 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
             c.privmsg(self.channel, r['display_name'] + ' channel title is currently ' + r['status'])
 
         elif cmd == "write":
-            file = open("profile.txt", "a")
-
             word = e.arguments[0].split(" ")[1];
+            inputProcessing.democracy(word);
 
-            file.write(word + " ")
-            file.close()
-
-        elif cmd == "profile_complete":
+        elif cmd == "complete":
             file = open("profile.txt", "a")
-
             file.write("\nProfile Complete\n")
             file.close()
-        # Provide basic information to viewers for specific commands
-        # elif cmd == "raffle":
-        #     message = "This is an example bot, replace this text with your raffle text."
-        #     c.privmsg(self.channel, message)
-        # elif cmd == "schedule":
-        #     message = "This is an example bot, replace this text with your schedule text."            
-        #     c.privmsg(self.channel, message)
 
         # The command was not recognized
         else:

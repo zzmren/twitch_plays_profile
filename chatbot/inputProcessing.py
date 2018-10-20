@@ -1,3 +1,5 @@
+wordDictionary = {}
+
 def democracy(inputW):
 	#word dictionary is global
 	#convert to all lowercase and see if in array
@@ -7,6 +9,7 @@ def democracy(inputW):
 	else:
 		wordDictionary[word] = 1
 	#now return until next word
+	print(wordDictionary)
 	return
 	
 def mostRepWord():
@@ -14,13 +17,17 @@ def mostRepWord():
 	#now have a count of all repeated words, determine most repeated word
 	#set max to the first word for comparison point
 	keyList = list(wordDictionary.keys())
-	max = keyList[0]
-	for i in keyList:
-		if (wordDictionary[i] > wordDictionary[max]):
-			max = i
+
+	if len(keyList) > 0:
+		max = keyList[0]
+		for i in keyList:
+			if (wordDictionary[i] > wordDictionary[max]):
+				max = i
+		
+		#now have most repeated word
+		#clear the wordDictionary
+		wordDictionary.clear()
 	
-	#now have most repeated word
-	#clear the wordDictionary
-	wordDictionary.clear()
-	
-	return max
+		return max
+
+	return ""
