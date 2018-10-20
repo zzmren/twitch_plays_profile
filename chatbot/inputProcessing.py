@@ -10,7 +10,7 @@ def democracy(inputW):
 	return
 	
 def mostRepWord():
-	#every 5-10 seconds, most inputted word is the word added to the doc/webpage
+	#every 5-10 seconds called by global time object, most inputted word is the word added to the doc/webpage
 	#now have a count of all repeated words, determine most repeated word
 	#set max to the first word for comparison point
 	keyList = list(wordDictionary.keys())
@@ -22,6 +22,7 @@ def mostRepWord():
 	#now have most repeated word
 	#clear the wordDictionary
 	wordDictionary.clear()
+	#start the timer again
+	t.start()
 	
 	return max
-	
