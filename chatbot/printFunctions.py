@@ -2,18 +2,22 @@
 #testing keyboard 
 import keyboard
 
-def printBio(word):
-	#print word sent to the function in bio
-	keyboard.write(word)
-	keyboard.write(' ')
-	return
-
 def printNewLine():
 	#print new line
 	keyboard.press_and_release('\n')
 	return
+
+def printBio(word):
+	#print word sent to the function in bio
+	if word == "newline":
+		printNewLine()
+	else:
+		keyboard.write(word)
+		keyboard.write(' ')
+		
+	return
 	
-def completBio():
+def completeBio():
 	#done writing bio, go to next page
 	keyboard.press_and_release('\t')
 	keyboard.press_and_release('\n')
