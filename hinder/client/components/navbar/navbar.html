@@ -14,9 +14,6 @@
         <li *ngFor="let item of menu" routerLinkActive="active">
             <a routerLink="{{item.link}}">{{item.title}}</a>
         </li>
-        <li [hidden]="!isAdmin" routerLinkActive="active">
-          <a routerLink="/admin">Admin</a>
-        </li>
       </ul>
 
       <ul class="nav navbar-nav navbar-right">
