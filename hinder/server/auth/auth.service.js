@@ -56,7 +56,7 @@ export function hasRole(roleRequired) {
             if(config.userRoles.indexOf(req.user.role) >= config.userRoles.indexOf(roleRequired)) {
                 return next();
             } else {
-                return res.status(403).send('Forbidden');
+                return res.status(403).send({message:'Forbidden'});
             }
         });
 }

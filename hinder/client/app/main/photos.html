@@ -1,0 +1,11 @@
+<div class="container">
+  <div class="col-md-6">
+    <img [src]="currentImage"/>
+  </div>
+  <div *ngIf="isAdmin" class="col-md-6">
+    Admin view
+  </div>
+  <div *ngIf="!isAdmin" class="col-md-6">
+    View for non admins
+  </div>
+</div>

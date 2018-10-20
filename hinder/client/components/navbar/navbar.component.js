@@ -12,6 +12,10 @@ export class NavbarComponent {
     menu = [{
         title: 'Home',
         link: '/home',
+    },
+    {
+        title: 'Photos',
+        link: '/photos'
     }];
     Router;
     isAdmin;
