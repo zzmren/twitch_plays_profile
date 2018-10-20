@@ -122,6 +122,20 @@ export function upload(req, res) {
         });
 }
 
+export function addText(req, res) {console.log(req.body);
+    var userId = req.body.user;
+    var data = req.body.text;
+    return User.findById(userId).exec()
+        .then(user => {
+                user.photo.text = data;
+                return user.save()
+                    .then(() => {
+                        res.status(204).end();
+                    })
+                    .catch(validationError(res));
+        });
+}
+
 /**
  * Get my info
  */

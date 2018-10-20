@@ -12,6 +12,8 @@
     <div class="text-center"><button (click)="onSubmit()" class="btn btn-success btn-lg">SEXIFY</button></div>
   </div>
   <div *ngIf="!isAdmin" class="col-md-6">
-    View for non admins
+    <div><span class="quotes">“</span><span class="text">{{imageText}}</span><span class="quotes">”</span></div>
+    <span class="name">- {{user && user.name}}</span>
+    <div class="text-center"><button (click)="getNewUser()" class="btn btn-success">SHOW ME MORE</button></div>
   </div>
 </div>

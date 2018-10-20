@@ -14,5 +14,6 @@ router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 router.post('/', controller.create);
 router.post('/upload', auth.isAuthenticated(), controller.upload);
+router.post('/addText', auth.hasRole('admin'), controller.addText);
 
 module.exports = router;

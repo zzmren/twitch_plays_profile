@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild, NgZone } from '@angular/core';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
@@ -39,40 +39,28 @@ export class PhotosComponent implements OnInit, OnDestroy {
     sanitizer;
     imageTitle;
     imageText;
+    user;
+    index = -1;
+    NgZone;
 
     @ViewChild('fileInput') fileInput: ElementRef;
 
-    static parameters = [AuthService, Http, SocketService, FormBuilder, AuthHttp, UserService, DomSanitizer];
-    constructor(authService: AuthService, http: Http, socketService: SocketService, fb: FormBuilder, authHttp: AuthHttp, userService: UserService, sanitizer:DomSanitizer) {
+    static parameters = [AuthService, Http, SocketService, FormBuilder, AuthHttp, UserService, DomSanitizer, NgZone];
+    constructor(authService: AuthService, http: Http, socketService: SocketService, fb: FormBuilder, authHttp: AuthHttp, userService: UserService, sanitizer:DomSanitizer, ngZone: NgZone) {
         this.AuthHttp = authHttp;
         this.sanitizer = sanitizer;
         this.Http = http;
         this.userService = userService;
         this.fb = fb;
+        this.NgZone = ngZone;
         this.SocketService = socketService;
         this.AuthService = authService;
         this.AuthService.currentUserChanged.subscribe(user => {
             this.currentUser = user;
             this.reset();
         });
-        this.userService.query().subscribe(users => {
-            this.users = users;
-            this.currentImage = this.sanitizer.bypassSecurityTrustUrl(users[2].photo.value);
-            this.imageTitle = users[2].photo.filename;
-        }, err => {
-            var t = this.AuthHttp.get('/api/users/publicUsers')
-            
-            .catch(handleError);
-            // .catch(err => Observable.throw(err.json().error || 'Server error'))
-            t.toPromise().then(data => {
-                var users = JSON.parse(data._body);
-                this.users = users;
-                this.currentImage = this.sanitizer.bypassSecurityTrustUrl(users[1].photo.value);
-                this.imageTitle = users[1].photo.filename
-            });
-
-        });
         this.reset()
+        setTimeout(() => this.getNewUser(), 1000);
     }
 
     ngOnInit() {
@@ -85,7 +73,6 @@ export class PhotosComponent implements OnInit, OnDestroy {
         });
         this.AuthService.isAdmin().then(is => {
             this.isAdmin = is;
-            console.log(is);
         });
         this.AuthService.getCurrentUser().then(user => {
             this.currentUser = user;
@@ -126,7 +113,47 @@ export class PhotosComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    console.log(this.imageText);
+    var data = { text: this.imageText, user: this.user._id };
+    let t = this.AuthHttp.post('/api/users/addText', data)
+            .map((res: Response) => res.json())
+            .catch(handleError);
+    t.toPromise().then(data => {
+        this.imageText = '';
+        this.getNewUser();
+    })
+  }
+
+  getNewUser() {
+    if(this.isAdmin){
+        this.userService.query().subscribe(users => {
+                this.users = users;
+                this.index < users.length-1 ? this.index++ : this.index = 0;
+                this.currentImage = this.sanitizer.bypassSecurityTrustUrl(users[this.index].photo.value);
+                this.imageTitle = users[this.index].photo.filename;
+                this.user = users[this.index];
+            }, err => {
+                console.log('oh crap')
+
+            });
+    }
+    else {console.log('not admin')
+        var t = this.AuthHttp.get('/api/users/publicUsers')
+                
+                .catch(handleError);
+                // .catch(err => Observable.throw(err.json().error || 'Server error'))
+                t.toPromise().then(data => {
+                    var users = JSON.parse(data._body);
+                    this.users = users;
+                    this.index < users.length-1 ? this.index++ : this.index = 0;
+                    this.currentImage = this.sanitizer.bypassSecurityTrustUrl(users[this.index].photo.value);
+                    this.imageTitle = users[this.index].photo.filename;
+                    this.user = users[this.index];
+                    this.imageText = users[this.index].photo.text;
+                    this.NgZone.run(() => {
+
+                    });
+                });
+    }
   }
 
   clearFile() {
