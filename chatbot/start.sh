@@ -1,0 +1,3 @@
+#!/bin/bash
+
+python chatbot.py stupidchatbot ny2eup44qpl62s7pso3nqjz9yamb5p 6r7b9ml3z01goenumialij7pdw7qhu stupid_twitch_profile
