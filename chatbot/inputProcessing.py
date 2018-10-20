@@ -22,7 +22,5 @@ def mostRepWord():
 	#now have most repeated word
 	#clear the wordDictionary
 	wordDictionary.clear()
-	#start the timer again
-	t.start()
 	
 	return max
