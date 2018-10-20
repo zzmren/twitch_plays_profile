@@ -30,6 +30,15 @@ export function index(req, res) {
         .catch(handleError(res));
 }
 
+export function publicUsers(req, res) {
+    return User.find({role: 'user'}, '-salt -password -role -email').exec()
+        .then(users => {
+            res.status(200).json(users);
+        })
+        .catch(handleError(res));
+}
+
+
 /**
  * Creates a new user
  */

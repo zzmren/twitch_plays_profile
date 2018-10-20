@@ -11,6 +11,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/toPromise';
 import { UserService } from '../../components/auth/user.service';
+import {DomSanitizer} from '@angular/platform-browser';
 
 const url = 'http://localhost:8000/upload';
 
@@ -35,12 +36,16 @@ export class PhotosComponent implements OnInit, OnDestroy {
     AuthHttp;
     users: Object[];
     currentImage;
+    sanitizer;
+    imageTitle;
+    imageText;
 
     @ViewChild('fileInput') fileInput: ElementRef;
 
-    static parameters = [AuthService, Http, SocketService, FormBuilder, AuthHttp, UserService];
-    constructor(authService: AuthService, http: Http, socketService: SocketService, fb: FormBuilder, authHttp: AuthHttp, userService: UserService) {
+    static parameters = [AuthService, Http, SocketService, FormBuilder, AuthHttp, UserService, DomSanitizer];
+    constructor(authService: AuthService, http: Http, socketService: SocketService, fb: FormBuilder, authHttp: AuthHttp, userService: UserService, sanitizer:DomSanitizer) {
         this.AuthHttp = authHttp;
+        this.sanitizer = sanitizer;
         this.Http = http;
         this.userService = userService;
         this.fb = fb;
@@ -52,9 +57,21 @@ export class PhotosComponent implements OnInit, OnDestroy {
         });
         this.userService.query().subscribe(users => {
             this.users = users;
-            this.currentImage = users[2].photo.value;
-            console.log(this.currentImage)
-        }, err => console.log(err));
+            this.currentImage = this.sanitizer.bypassSecurityTrustUrl(users[2].photo.value);
+            this.imageTitle = users[2].photo.filename;
+        }, err => {
+            var t = this.AuthHttp.get('/api/users/publicUsers')
+            
+            .catch(handleError);
+            // .catch(err => Observable.throw(err.json().error || 'Server error'))
+            t.toPromise().then(data => {
+                var users = JSON.parse(data._body);
+                this.users = users;
+                this.currentImage = this.sanitizer.bypassSecurityTrustUrl(users[1].photo.value);
+                this.imageTitle = users[1].photo.filename
+            });
+
+        });
         this.reset()
     }
 
@@ -109,20 +126,7 @@ export class PhotosComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    const formModel = this.form.value;
-    this.loading = true;
-    // In a real-world app you'd have a http request / service call here like
-    // this.http.post('apiUrl', formModel)
-    console.log(formModel);
-    let t = this.AuthHttp.post('/api/users/upload', formModel)
-            .map((res: Response) => res.json())
-            .catch(handleError);
-    t.toPromise().then(data => {
-        console.log(data);
-        this.loading = false;
-        this.finished = true;
-        this.clearFile();
-    })
+    console.log(this.imageText);
   }
 
   clearFile() {
