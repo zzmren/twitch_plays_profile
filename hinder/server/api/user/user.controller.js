@@ -112,7 +112,6 @@ export function changePassword(req, res) {
 }
 
 export function upload(req, res) {
-    console.log(req.user);
     var userId = req.user._id;
     var data = req.body.avatar;
     return User.findById(userId).exec()
@@ -126,7 +125,7 @@ export function upload(req, res) {
         });
 }
 
-export function addText(req, res) {console.log(req.body);
+export function addText(req, res) {
     var userId = req.body.user;
     var data = req.body.text;
     return User.findById(userId).exec()
