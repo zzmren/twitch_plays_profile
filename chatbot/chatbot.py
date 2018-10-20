@@ -14,6 +14,7 @@ import requests
 import inputProcessing
 from threading import Timer, Event
 from Thread import MyThread
+import printFunctions as bio
 
 stopflag = Event()
 thread = MyThread(stopflag)
@@ -77,13 +78,23 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
             inputProcessing.democracy(word);
 
         elif cmd == "complete":
-            file = open("profile.txt", "a")
-            file.write("\nProfile Complete\n")
-            file.close()
+            bio.completeBio()
+            # file = open("profile.txt", "a")
+            # file.write("\nProfile Complete\n")
+            # file.close()
+
+        elif cmd == "help":
+            url = 'https://api.twitch.tv/kraken/channels/' + self.channel_id
+            headers = {'Client-ID': self.client_id, 'Accept': 'application/vnd.twitchtv.v5+json'}
+            r = requests.get(url, headers=headers).json()
+            c.privmsg(self.channel, "Type `!write word` to include a word in queue (only the first word counts). Type `!write newline` for a new line. `!complete` to finish writing the profile. `!help` to See this again.")
 
         # The command was not recognized
         else:
-            c.privmsg(self.channel, "Did not understand command: " + cmd)
+            url = 'https://api.twitch.tv/kraken/channels/' + self.channel_id
+            headers = {'Client-ID': self.client_id, 'Accept': 'application/vnd.twitchtv.v5+json'}
+            r = requests.get(url, headers=headers).json()
+            c.privmsg(self.channel, "Type `!write word` to include a word in queue (only the first word counts). Type `!write newline` for a new line. `!complete` to finish writing the profile. `!help` to See this again.")
 
 def main():
     if len(sys.argv) != 5:

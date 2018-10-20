@@ -1,5 +1,7 @@
 from threading import Thread, Event
 import inputProcessing
+import keyboard
+import printFunctions as bio
 
 class MyThread(Thread):
     def __init__(self, event):
@@ -10,9 +12,10 @@ class MyThread(Thread):
         while not self.stopped.wait(5):
           word = inputProcessing.mostRepWord()
           if word != "":
-            file = open("profile.txt", "a")
-            file.write(word + " ")
-            file.close()
+            bio.printBio(word)
+            # file = open("profile.txt", "a")
+            # file.write(word + " ")
+            # file.close()
           
           print("my thread")
           # call a function
