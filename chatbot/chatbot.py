@@ -77,8 +77,8 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
             word = e.arguments[0].split(" ")[1];
             inputProcessing.democracy(word);
 
-        elif cmd == "complete":
-            bio.completeBio()
+        # elif cmd == "complete":
+            # bio.completeBio()
             # file = open("profile.txt", "a")
             # file.write("\nProfile Complete\n")
             # file.close()
@@ -87,14 +87,14 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
             url = 'https://api.twitch.tv/kraken/channels/' + self.channel_id
             headers = {'Client-ID': self.client_id, 'Accept': 'application/vnd.twitchtv.v5+json'}
             r = requests.get(url, headers=headers).json()
-            c.privmsg(self.channel, "Type `!write word` to include a word in queue (only the first word counts). Type `!write newline` for a new line. `!complete` to finish writing the profile. `!help` to See this again.")
+            c.privmsg(self.channel, "Type `!write word` to include a word in queue (only the first word counts). Type `!write newline` for a new line. `!write completeprofile` to finish writing the profile. `!help` to See this again.")
 
         # The command was not recognized
         else:
             url = 'https://api.twitch.tv/kraken/channels/' + self.channel_id
             headers = {'Client-ID': self.client_id, 'Accept': 'application/vnd.twitchtv.v5+json'}
             r = requests.get(url, headers=headers).json()
-            c.privmsg(self.channel, "Type `!write word` to include a word in queue (only the first word counts). Type `!write newline` for a new line. `!complete` to finish writing the profile. `!help` to See this again.")
+            c.privmsg(self.channel, "Type `!write word` to include a word in queue (only the first word counts). Type `!write newline` for a new line. `!write completeprofile` to finish writing the profile. `!help` to See this again.")
 
 def main():
     if len(sys.argv) != 5:
@@ -108,6 +108,7 @@ def main():
 
     bot = TwitchBot(username, client_id, token, channel)
     bot.start()
+
 
 if __name__ == "__main__":
     main()

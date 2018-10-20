@@ -7,16 +7,7 @@ def printNewLine():
 	keyboard.press_and_release('\n')
 	return
 
-def printBio(word):
-	#print word sent to the function in bio
-	if word == "newline":
-		printNewLine()
-	else:
-		keyboard.write(word)
-		keyboard.write(' ')
-		
-	return
-	
+
 def completeBio():
 	#done writing bio, go to next page
 	keyboard.press_and_release('\t')
@@ -25,4 +16,16 @@ def completeBio():
 	keyboard.press('\t')
 	keyboard.release('\t')
 	keyboard.release('shift')
+	return
+
+def printBio(word):
+	#print word sent to the function in bio
+	if word == "newline":
+		printNewLine()
+	elif word == "completeprofile":
+		completeBio()
+	else:
+		keyboard.write(word)
+		keyboard.write(' ')
+		
 	return
