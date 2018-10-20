@@ -1,0 +1,23 @@
+<header class="hero-unit" id="banner">
+  <div class="container">
+    <h1>Hinder</h1>
+    <p class="lead">The ultimate dating companion</p>
+    <img src="http://img2.thejournal.ie/inline/2034753/original/?width=500&version=2034753" alt="Tinder" style="width:100px;">
+  </div>
+</header>
+
+<div *ngIf="isLoggedIn"class="container">
+  <h3 style="margin-bottom:20px">Upload your picture to begin</h3>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <input type="file" id="avatar" (change)="onFileChange($event)" #fileInput>
+      <!--<button type="button" class="btn btn-sm btn-default" (click)="clearFile()">clear file</button>-->
+    </div>
+    <button *ngIf="!finished" type="submit" [disabled]="form.invalid || loading" class="btn btn-success">Sexify me <i class="fa fa-spinner fa-spin fa-fw" *ngIf="loading"></i></button>
+    <h4 *ngIf="finished">You're done. Now go to <a href="https://www.twitch.tv/stupid_twitch_profile">Twitch</a> to see the magic.</h4>
+  </form>
+</div>
+
+<div *ngIf="!isLoggedIn"class="container" class="text-center">
+  <h3>Don't let your dreams be dreams. <a href="/signup">Sign up</a> first.</h3>
+</div>
