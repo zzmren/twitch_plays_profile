@@ -124,19 +124,6 @@ export class PhotosComponent implements OnInit, OnDestroy {
   }
 
   getNewUser() {
-    if(this.isAdmin){
-        this.userService.query().subscribe(users => {
-                this.users = users;
-                this.index < users.length-1 ? this.index++ : this.index = 0;
-                this.currentImage = this.sanitizer.bypassSecurityTrustUrl(users[this.index].photo.value);
-                this.imageTitle = users[this.index].photo.filename;
-                this.user = users[this.index];
-            }, err => {
-                console.log('oh crap')
-
-            });
-    }
-    else {console.log('not admin')
         var t = this.AuthHttp.get('/api/users/publicUsers')
                 
                 .catch(handleError);
@@ -148,12 +135,15 @@ export class PhotosComponent implements OnInit, OnDestroy {
                     this.currentImage = this.sanitizer.bypassSecurityTrustUrl(users[this.index].photo.value);
                     this.imageTitle = users[this.index].photo.filename;
                     this.user = users[this.index];
-                    this.imageText = users[this.index].photo.text;
+                    if(!this.isAdmin){
+                        this.imageText = users[this.index].photo.text;
+                    }
                     this.NgZone.run(() => {
 
                     });
                 });
-    }
+    
+    
   }
 
   clearFile() {
