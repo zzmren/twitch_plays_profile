@@ -74,7 +74,9 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
             c.privmsg(self.channel, r['display_name'] + ' channel title is currently ' + r['status'])
 
         elif cmd == "write":
-            word = e.arguments[0].split(" ")[1];
+            wordarr = e.arguments[0].split(" ")
+            if len(wordarr) > 1:
+                word = wordarr[1];
             inputProcessing.democracy(word);
 
         # elif cmd == "complete":
@@ -87,14 +89,14 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
             url = 'https://api.twitch.tv/kraken/channels/' + self.channel_id
             headers = {'Client-ID': self.client_id, 'Accept': 'application/vnd.twitchtv.v5+json'}
             r = requests.get(url, headers=headers).json()
-            c.privmsg(self.channel, "Type `!write word` to include a word in queue (only the first word counts). Type `!write newline` for a new line. `!write completeprofile` to finish writing the profile. `!help` to See this again.")
+            c.privmsg(self.channel, "Type `!write word` to include a word in queue (only the first word counts). Type `!write newline` for a new line. `!write completeprofile` to finish writing the profile. `!help` to See this again. Make an account and upload your photo to https://goo.gl/wn2gue")
 
         # The command was not recognized
         else:
             url = 'https://api.twitch.tv/kraken/channels/' + self.channel_id
             headers = {'Client-ID': self.client_id, 'Accept': 'application/vnd.twitchtv.v5+json'}
             r = requests.get(url, headers=headers).json()
-            c.privmsg(self.channel, "Type `!write word` to include a word in queue (only the first word counts). Type `!write newline` for a new line. `!write completeprofile` to finish writing the profile. `!help` to See this again.")
+            c.privmsg(self.channel, "Type `!write word` to include a word in queue (only the first word counts). Type `!write newline` for a new line. `!write completeprofile` to finish writing the profile. `!help` to See this again. Make an account and upload your photo to https://goo.gl/wn2gue")
 
 def main():
     if len(sys.argv) != 5:
